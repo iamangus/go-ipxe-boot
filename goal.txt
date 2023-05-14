@@ -1,0 +1,18 @@
+recieve a request for:
+
+4a:2e:c4:0b:43:99.ipxe
+
+parse request for $mac address
+look in machine configs for corrispondind $hostname
+
+build response file:
+
+#!ipxe
+set iscsi-target iscsi:$hostname-iscsi.$domain::::iqn.2016-09.com.openebs.cstor:pvc-$hostname
+set gateway 10.0.1.1
+set initiator-iqn iqn.2015-02.com.srvd.$hostname-iscsi
+set keep-san 1
+sanboot ${iscsi-target}
+boot
+
+send response

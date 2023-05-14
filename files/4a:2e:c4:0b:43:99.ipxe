@@ -1,0 +1,7 @@
+#!ipxe
+set iscsi-target iscsi:testvm-iscsi.srvd.dev::31509::iqn.2016-09.com.openebs.cstor:pvc-2c76e8fb-3425-4ba2-b96f-faf92227f83a
+set gateway 10.0.1.1
+set initiator-iqn iqn.2015-02.com.srvd
+set keep-san 1
+sanboot ${iscsi-target}
+boot
