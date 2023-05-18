@@ -10,13 +10,9 @@ import (
 )
 
 func getBoot(w http.ResponseWriter, r *http.Request) {
-        fmt.Printf("got /boot request\n")
-
+        fmt.Printf("got /boot request...\n")
         //get mac
-        res := strings.ReplaceAll(r.URL.String(), "/boot/", "")
-        res = strings.ReplaceAll(res, ".ipxe", "")
-        mac := strings.ReplaceAll(res, "%3A", ":")
-        fmt.Println(mac)
+		mac := getMAC(r)
         //build ipxe file using mac
         ipxe := getIpxe(mac)
         //respond with file
@@ -25,6 +21,33 @@ func getBoot(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
         w.Write([]byte(ipxe))
         return
+}
+
+func getISCSI(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("got /iscsi request...\n")
+	//get mac
+	mac := getMAC(r)
+	//build ipxe file using mac
+	pvc := getPVC(mac)
+	//respond with file
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Disposition", "attachment; filename=4a:2e:c4:0b:43:99.ipxe")
+	w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
+	w.Write([]byte(ipxe))
+	return
+}
+
+func getMAC(r *http.Request) string {
+	fmt.Printf("getting mac from request...\n")
+	res := strings.ReplaceAll(r.URL.String(), "/boot/", "")
+	res = strings.ReplaceAll(res, ".ipxe", "")
+	mac := strings.ReplaceAll(res, "%3A", ":")
+	return mac
+}
+
+func getHOST(r *http.Request) string {
+	fmt.Printf("looking up hostname using mac...\n")
+	return hostname
 }
 
 func getIpxe(mac string) string {
@@ -48,6 +71,10 @@ boot
 
         resp := strings.ReplaceAll(response, "%h", data[mac].(string))
         return resp
+}
+
+func getPVC() string {
+
 }
 
 func main() {

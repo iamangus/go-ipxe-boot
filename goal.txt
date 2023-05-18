@@ -16,3 +16,12 @@ sanboot ${iscsi-target}
 boot
 
 send response
+##^^Mostly done^^##
+
+
+server then boots to its disks grub
+loads kernel and initramfs
+then it will curl /iscsi/$mac.txt
+we then check all PVCs for one with a label "mac" and value of the mac address
+return that pvc name
+server then iscsi boots with that name as the target.
